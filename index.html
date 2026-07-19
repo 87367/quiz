@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gliederung wissenschaftlicher Arbeiten – Übung</title>
+<title>Gliederung</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -121,6 +121,19 @@
     flex-direction: column;
     gap: 0.5rem;
     min-height: 60px;
+  }
+  .card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.2rem;
+    border-bottom: 1px dashed #bfdbfe;
+  }
+  .card-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
  
   /* ── Drop Zone Panel (right) ── */
@@ -451,9 +464,7 @@
 </footer>
 
 <script>
-// ─────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────
+
 const sections = [
   {
     id: 'titel',
@@ -465,17 +476,9 @@ const sections = [
     ]
   },
   {
-    id: 'abstract',
-    title: 'Abstract',
-    number: '2',
-    items: [
-      'Zusammenfassung der Erkenntnisse und des Vorgehens des Textes zwecks schnellen Überblicks'
-    ]
-  },
-  {
     id: 'einleitung',
     title: 'Einleitung',
-    number: '3',
+    number: '2',
     items: [
       'Formulierung eines Problems, einer Frage und einer These',
       'Grenzen der Untersuchung',
@@ -485,7 +488,7 @@ const sections = [
   {
     id: 'forschungsstand',
     title: 'Forschungsstand',
-    number: '4',
+    number: '3',
     items: [
       'Darstellung und Diskussion relevanter Vorarbeiten',
       'Vorläufige Positionierung im Forschungskontext'
@@ -494,25 +497,25 @@ const sections = [
   {
     id: 'methoden',
     title: 'Methoden, Begriffe und Vorgehen',
-    number: '5',
+    number: '4',
     items: [
       'Erläuterung des gewählten Vorgehens und der Quellenwahl', 
-      'Definition zentraler analytischer Begriffe, ggf. Verortung in bestimmtem methodischem Zugriff'
+      'Definition zentraler analytischer Begriffe',
+      'Verortung in bestimmtem methodischem Zugriff'
     ]
   },
   {
     id: 'empirie',
-    title: 'Quellenanalyse (»Empirie«)',
-    number: '6',
+    title: 'Quellenanalyse',
+    number: '5',
     items: [
-      'Entwicklung und Falsifizierung der vertretenen These anhand von Quellen (in GeWi) bzw. allg. Daten',
-      'Beleg von vertretener Meinung'
+      'Entwicklung und Falsifizierung der vertretenen These anhand von Quellen',
     ]
   },
   {
     id: 'diskussion',
     title: 'Diskussion',
-    number: '7',
+    number: '6',
     items: [
       'Einordnung der zuvor gewonnenen Erkenntnisse', 
       'ggf. Qualifizierung/Quantifizierung der Kernthese',
@@ -522,7 +525,7 @@ const sections = [
   {
     id: 'fazit',
     title: 'Fazit',
-    number: '8',
+    number: '7',
     items: [
       'Zusammenfassung der Erkenntnisse und Methode',
       'Ggf. Ausblick, Nennung von Desiderata'
@@ -585,10 +588,21 @@ function buildZones() {
 function buildPool() {
   const pool = document.getElementById('card-pool');
   pool.innerHTML = '';
-  const shuffled = shuffle(allItems);
-  shuffled.forEach(item => {
-    pool.appendChild(makeCard(item));
+
+  // Gruppenreihenfolge zufällig
+  const shuffledSections = shuffle(sections);
+
+  shuffledSections.forEach(sec => {
+    const group = document.createElement('div');
+    group.className = 'card-group';
+
+    // Reihenfolge der Items innerhalb der Gruppe zufällig
+    const groupItems = shuffle(allItems.filter(it => it.correctSection === sec.id));
+    groupItems.forEach(item => group.appendChild(makeCard(item)));
+
+    pool.appendChild(group);
   });
+
   updateProgress();
 }
 
